@@ -32,9 +32,13 @@
             overflow: hidden;
             border-radius: 0.75rem;
             cursor: pointer;
+            aspect-ratio: 1 / 1; /* For a consistent square-like shape */
         }
         .image-card img {
             transition: transform 0.4s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .image-card:hover img {
             transform: scale(1.1);
@@ -79,12 +83,12 @@
                 <p class="text-gray-600 mt-2">Tu portal a millones de imágenes de alta resolución.</p>
             </div>
             <div class="max-w-2xl mx-auto">
-                <div class="flex items-center bg-gray-100 rounded-full shadow-inner p-2">
-                    <input type="text" id="searchInput" placeholder="Busca por 'tigres', 'oficina', 'naturaleza'..." class="w-full bg-transparent border-none focus:ring-0 text-lg px-4 py-2 text-gray-800 placeholder-gray-500">
-                    <button id="searchBtn" class="bg-indigo-600 text-white rounded-full p-3 hover:bg-indigo-700 transition-colors shadow-md">
+                <form id="searchForm" class="flex items-center bg-gray-100 rounded-full shadow-inner p-2">
+                    <input type="text" id="searchInput" placeholder="Busca por 'tigres', 'oficina'..." class="w-full bg-transparent border-none focus:ring-0 text-lg px-4 py-2 text-gray-800 placeholder-gray-500">
+                    <button id="searchBtn" type="submit" class="bg-indigo-600 text-white rounded-full p-3 hover:bg-indigo-700 transition-colors shadow-md">
                         <i class="fa-solid fa-magnifying-glass text-xl"></i>
                     </button>
-                </div>
+                </form>
                 <div id="recentSearches" class="flex flex-wrap gap-2 justify-center mt-4">
                     <!-- Recent searches will be injected here -->
                 </div>
@@ -95,8 +99,8 @@
     <!-- ===== MAIN CONTENT ===== -->
     <main class="container mx-auto p-4 mt-6">
         
-        <!-- Ad Banner Top -->
-        <div id="ad-slot-top" class="my-6 text-center flex items-center justify-center">
+        <!-- Ad Banner Top (Desktop Only) -->
+        <div id="ad-slot-top" class="my-6 text-center hidden lg:flex items-center justify-center">
              <script type="text/javascript">
                 atOptions = {
                     'key' : 'db09fc4c7ea4db3ada862971d6504d09',
@@ -175,7 +179,7 @@
 
             <!-- Content Area -->
             <div class="lg:col-span-9">
-                <div id="resultsContainer" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                <div id="resultsContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <!-- Image results will be injected here -->
                 </div>
                 <div id="loader" class="hidden text-center py-10">
@@ -189,8 +193,8 @@
             </div>
         </div>
         
-        <!-- Intermediate Ad Banner -->
-        <div class="my-8 text-center flex items-center justify-center">
+        <!-- Intermediate Ad Banner (Desktop Only) -->
+        <div class="my-8 text-center hidden lg:flex items-center justify-center">
             <script type="text/javascript">
                 atOptions = {
                     'key' : 'a85fe398dc8ea47abe20cbdcca4056eb',
@@ -203,8 +207,8 @@
             <script type="text/javascript" src="//www.highperformanceformat.com/a85fe398dc8ea47abe20cbdcca4056eb/invoke.js"></script>
         </div>
 
-        <!-- Mobile Ad Banner -->
-        <div class="my-6 text-center flex items-center justify-center sm:hidden">
+        <!-- Mobile Ad Banner (Mobile Only) -->
+        <div class="my-6 text-center flex items-center justify-center lg:hidden">
              <script type="text/javascript">
                 atOptions = {
                     'key' : '98be4c4d3dabf48ef15c554ddeb814e6',
@@ -221,7 +225,7 @@
 
     <!-- ===== FOOTER ===== -->
     <footer class="bg-white mt-12 py-6 border-t">
-        <div class="container mx-auto text-center text-gray-600">
+        <div class="container mx-auto text-center text-gray-600 px-4">
              <!-- Footer Ad -->
             <div class="my-6 text-center flex items-center justify-center">
                 <script async="async" data-cfasync="false" src="//pl27083294.profitableratecpm.com/e5730b609513b05557de45f0bd85a8da/invoke.js"></script>
@@ -235,11 +239,11 @@
     <div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
         <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col modal-content">
             <div class="flex justify-between items-center p-4 border-b">
-                <div id="modalPhotographer" class="text-lg font-semibold"></div>
-                <button id="closeModalBtn" class="text-3xl text-gray-500 hover:text-gray-900">&times;</button>
+                <div id="modalPhotographer" class="text-lg font-semibold truncate pr-4"></div>
+                <button id="closeModalBtn" class="text-3xl text-gray-500 hover:text-gray-900 flex-shrink-0">&times;</button>
             </div>
-            <div class="p-4 flex-grow overflow-auto text-center">
-                <img id="modalImage" src="" alt="Imagen ampliada" class="max-h-full max-w-full inline-block">
+            <div class="p-4 flex-grow overflow-auto text-center flex items-center justify-center">
+                <img id="modalImage" src="" alt="Imagen ampliada" class="max-h-full max-w-full object-contain">
             </div>
             <div class="p-4 border-t flex flex-wrap gap-4 justify-center">
                 <a id="downloadBtn" href="#" download target="_blank" class="bg-green-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-600 transition-colors">
@@ -257,9 +261,9 @@
         // =================================================================
         // CONFIG & STATE
         // =================================================================
-        const API_KEY = 'yR9xeGhXnQ5IZtCH6m0gOdp9wL97eL7AsytbppxIIMPJWey0IgQ3ymVA'; // <-- Clave de API de Pexels
+        const API_KEY = 'yR9xeGhXnQ5IZtCH6m0gOdp9wL97eL7AsytbppxIIMPJWey0IgQ3ymVA'; // Tu clave de API de Pexels
         const PEXELS_API_URL = 'https://api.pexels.com/v1/search';
-        const perPage = 15;
+        const perPage = 18; // Adjusted for better grid filling
         let currentPage = 1;
         let currentQuery = '';
         let currentOrientation = '';
@@ -271,8 +275,8 @@
         // =================================================================
         // DOM ELEMENTS
         // =================================================================
+        const searchForm = document.getElementById('searchForm');
         const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
         const resultsContainer = document.getElementById('resultsContainer');
         const loader = document.getElementById('loader');
         const message = document.getElementById('message');
@@ -295,7 +299,7 @@
         // API FUNCTIONS
         // =================================================================
         async function fetchImages(query, page, orientation, color) {
-            if (!API_KEY || API_KEY === 'TU_CLAVE_API_DE_PEXELS') {
+            if (!API_KEY || API_KEY === 'TU_CLAVE_API_DE_PEXELS') { // Safety check
                 showMessage('error', 'Clave de API no configurada. Por favor, edita el archivo y añade tu clave de Pexels.');
                 return null;
             }
@@ -324,37 +328,12 @@
         // =================================================================
         function displayImages(photos) {
             photos.forEach((photo, index) => {
-                // Insertar un anuncio cada 6 imágenes
-                if (index > 0 && index % 6 === 0) {
-                    const adSlot = document.createElement('div');
-                    adSlot.className = 'sm:col-span-1 xl:col-span-1 flex items-center justify-center bg-gray-200 rounded-lg min-h-[300px]';
-                    
-                    const adScriptContainer = document.createElement('div');
-                    const adScript1 = document.createElement('script');
-                    adScript1.type = 'text/javascript';
-                    adScript1.innerHTML = `
-                        atOptions = {
-                            'key' : '2e2239d762052f17248f0fc65a81beb8',
-                            'format' : 'iframe',
-                            'height' : 250,
-                            'width' : 300,
-                            'params' : {}
-                        };
-                    `;
-                    const adScript2 = document.createElement('script');
-                    adScript2.type = 'text/javascript';
-                    adScript2.src = '//www.highperformanceformat.com/2e2239d762052f17248f0fc65a81beb8/invoke.js';
-                    
-                    adScriptContainer.appendChild(adScript1);
-                    adScriptContainer.appendChild(adScript2);
-                    adSlot.appendChild(adScriptContainer);
-                    resultsContainer.appendChild(adSlot);
-                }
-                
+                // Insert ad logic is removed from here to simplify and avoid layout shifts. 
+                // Ads are placed statically in the layout.
                 const card = document.createElement('div');
                 card.className = 'image-card bg-gray-200';
                 card.innerHTML = `
-                    <img src="${photo.src.large}" alt="${photo.alt}" class="w-full h-full object-cover">
+                    <img src="${photo.src.large}" alt="${photo.alt || 'Imagen de Pexels'}" loading="lazy" class="w-full h-full object-cover">
                     <div class="image-overlay">
                         <p class="text-white font-semibold truncate">${photo.photographer}</p>
                     </div>
@@ -372,7 +351,7 @@
         function updateRecentSearches(query) {
             if (!recentSearches.includes(query)) {
                 recentSearches.unshift(query);
-                recentSearches = recentSearches.slice(0, 5); // Limitar a 5 búsquedas
+                recentSearches = recentSearches.slice(0, 5); // Limit to 5 searches
                 localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
             }
             renderRecentSearches();
@@ -435,7 +414,7 @@
                 
                 displayImages(data.photos);
 
-                if (resultsContainer.children.length < totalResults) {
+                if (resultsContainer.children.length < totalResults && data.photos.length > 0) {
                     loadMoreContainer.classList.remove('hidden');
                 } else {
                     loadMoreContainer.classList.add('hidden');
@@ -443,14 +422,16 @@
             }
         }
         
-        searchBtn.addEventListener('click', () => handleSearch());
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSearch();
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleSearch();
         });
+        
         loadMoreBtn.addEventListener('click', () => {
             currentPage++;
             handleSearch(true);
         });
+        
         orientationFilter.addEventListener('change', () => {
             if (currentQuery) handleSearch();
         });
@@ -476,7 +457,7 @@
         function openModal(photo) {
             modalImage.src = photo.src.large2x;
             modalPhotographer.textContent = `Fotografía por ${photo.photographer}`;
-            downloadBtn.href = photo.src.original;
+            downloadBtn.href = `${photo.src.original}?cs=srgb&dl=${photo.photographer.replace(' ', '-')}-${photo.id}.jpg`;
             pexelsLink.href = photo.url;
             imageModal.classList.remove('hidden');
             imageModal.classList.add('flex');
@@ -507,8 +488,5 @@
     });
     </script>
     
-    <!-- Additional Ad Script -->
-    <script type='text/javascript' src='//pl27083142.profitableratecpm.com/ed/53/7e/ed537ee87141fb4508dfd6bae7cf3097.js'></script>
 </body>
 </html>
-
